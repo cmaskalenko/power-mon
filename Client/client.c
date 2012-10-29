@@ -1,5 +1,4 @@
 #include <stdio.c>
-#include <fcntl.h>
 #include <errno.h>
 #include <stderr.h>
 
@@ -9,7 +8,7 @@ char get_char(void);
 
 int main(int argc, char *argv[])
 {
-	int writefile;
+	FILE *writefile;
 	char[256] sprint;
 
 	if (argc != 1)
@@ -18,8 +17,8 @@ int main(int argc, char *argv[])
 		exit(1);
 	}
 
-	writefile = open(argv[1],O_WRONLY | O_APPEND);
-	if (writefile < 0)
+	writefile = fopen(argv[1],"a");
+	if (writefile==null)
 	{
 		fprintf("Failed to open output file");
 		return errno;
@@ -30,8 +29,10 @@ int main(int argc, char *argv[])
 	while(sprint!='\0')
 	{
 		sprint = get_serial();
-		write(writefile, sprint, sizeof(sprint));
+		fprintf(writefile, sprint);
 	}
-		
+	
+	fclose(writefile);
+
 	return 0;
 }
