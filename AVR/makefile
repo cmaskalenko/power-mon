@@ -2,7 +2,7 @@ CC=avr-gcc
 CFLAGS=-g -Os -Wall -mcall-prologues -mmcu=atmega88
 OBJ2HEX=avr-objcopy
 #UISP=/usr/local/bin/uisp
-TARGET=blink
+TARGET=avrcode
 ADFLAGS=-p m88 -c avrispmkII -P usb
 
 .PHONY: fuses prog erase
