@@ -1,26 +1,24 @@
-#include <stdio.c>
+#include <stdio.h>
 #include <errno.h>
-#include <stderr.h>
+#include <errno.h>
 #include <termios.h>
 
 FILE* init_serial(void);
-string get_serial(void);
-char get_char(void);
 
 int main(int argc, char *argv[])
 {
-	FILE* writefile, serialport;
-	char[256] sprint;
+	FILE *writefile, *serialport;
+	char sprint[256];
 
 	if (argc != 1)
 	{
 		printf("Incorrect number of arguments. Please only pass the address of an output file.\n");
-		exit(1);
+		return 1;
 	}
 
 	//Open the file to write recieved data to
 	writefile = fopen(argv[1],"a");
-	if (writefile == null)
+	if (writefile == NULL)
 	{
 		perror("Failed to open output file");
 		return errno;
@@ -28,7 +26,7 @@ int main(int argc, char *argv[])
 
 	//Intialize serial port
 	serialport = init_serial();
-	if (serialport == null)
+	if (serialport == NULL)
 	{
 		perror("Failed to open serial communication");
 		return errno;
