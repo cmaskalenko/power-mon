@@ -13,19 +13,19 @@ int main(void) {
 }
 
 
-long getPower()
+long getPower(void)
 {
 	long i,v;
 	
 	ADMUX = 0; // Assumes voltage sensor is on ADC0
-	ADCSRA = (1<<ADEN)|(1<<ADSC); // Enable ADC and start conversion
+	ADCSRA = (1<<ADEN) | (1<<ADSC); // Enable ADC and start conversion
 	while((ADCSRA>>ADSC)&1); // Wait for conversion to complete
-	v = (ADCH<<8)|ADCL - 1<<9; // Get voltage value
+	v = (ADCH<<8) | ADCL - 1<<9; // Get voltage value
 	
 	ADMUX = 1<<MUX0; // Assumes current sensor is on ADC1
-	ADCSRA = (1<<ADEN)|(1<<ADSC); // Enable ADC and start conversion
+	ADCSRA = (1<<ADEN) | (1<<ADSC); // Enable ADC and start conversion
 	while((ADCSRA>>ADSC)&1); // Wait for conversion to complete
-	i = (ADCH<<8)|ADCL - 1<<9; // Get current value
+	i = (ADCH<<8) | ADCL - 1<<9; // Get current value
 	
 	return i*v;
 }
