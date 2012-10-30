@@ -3,10 +3,15 @@
 #include <avr/iom88.h>
 #include <stdio.h>
 
+#define F_CPU 8000000UL //8MHz clock
+
 long getPower(void);
 void init_serial(void);
 void transmit_serial(unsigned char data);
 void transmit_message(char[255] message);
+void timer_init(void);
+
+int counter = 0;
 
 int main(void) {
 	return 0;
@@ -62,4 +67,23 @@ void transmit_serial(unsigned char data)
 	//Wait for empty transmit buffer, then transmit
 	while(!(UCSR0A&(1<<UDRE0)));
 	UDR0 = data;
+}
+
+void timer_init(void)
+{
+	//Ensure that OC1A is disconnected from output pin 
+	TCCR1A = (0<<COM0A1) | (0<<COM0A0);
+	
+	//No prescaling, CTC mode
+	TCCR1B = (1<<CS10) | (1<<WGM12);
+
+	//Enable interupt flag
+	TIMSK1 = (1<<OCIE1A);
+
+	OCR1A = 999;
+}
+
+ISR(TIMER1_COMPA_vect)
+{
+	counter++;
 }
