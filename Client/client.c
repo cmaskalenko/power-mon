@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <errno.h>
 #include <termios.h>
+#include <unistd.h>
 
 FILE* init_serial(void);
 
@@ -57,6 +58,8 @@ FILE* init_serial()
 	//Set baud rate
 	cfsetispeed(&termc, B9600);
 	cfsetospeed(&termc, B9600);
+
+	tcsetattr(sport, &termc);
 
 	return sport;
 }
