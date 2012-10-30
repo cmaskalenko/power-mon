@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 	FILE *writefile, *serialport;
 	char sprint[256];
 
-	if (argc != 1)
+	if (argc != 2)
 	{
 		printf("Incorrect number of arguments. Please only pass the address of an output file.\n");
 		return 1;
