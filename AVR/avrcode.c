@@ -10,11 +10,15 @@ long getPower(void);
 void init_serial(void);
 void transmit_serial(unsigned char data);
 void transmit_message(char[255] message);
-void timer_init(void);
+void init_timer(void);
 
 int counter = 0;
 
-int main(void) {
+int main(void)
+{
+	sei();
+	init_serial();
+	init_timer();
 	return 0;
 }
 
@@ -92,7 +96,7 @@ void transmit_serial(unsigned char data)
 	UDR0 = data;
 }
 
-void timer_init(void)
+void init_timer(void)
 {
 	//Ensure that OC1A is disconnected from output pin 
 	TCCR1A = (0<<COM0A1) | (0<<COM0A0);
@@ -109,4 +113,5 @@ void timer_init(void)
 ISR(TIMER1_COMPA_vect)
 {
 	counter++;
+	testADCS();
 }
