@@ -96,6 +96,7 @@ void init_timer(void)
 ISR(TIMER1_COMPA_vect)
 {
 	float f_power;
+	char[16] msg;
 
 	counter++;
 	powerSum += getPower(); // Sum up power values
@@ -104,8 +105,10 @@ ISR(TIMER1_COMPA_vect)
 	{
 		// Calculate mean power in watts
 		f_power = powerSum / N * (-0.027454);
-
-		// Transmit data here
+		
+		// Transmit data to PC
+		sprintf(msg,"(%f)",f_power);
+		transmit_message(msg);
 
 		counter = 0; // Reset power calculation
 		powerSum = 0;
