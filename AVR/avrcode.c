@@ -84,7 +84,7 @@ void init_timer(void)
 	//Enable interupt flag
 	TIMSK1 = (1<<OCIE1A);
 
-	OCR1A = 999;
+	OCR1A = 3999;
 }
 
 ISR(TIMER1_COMPA_vect)
