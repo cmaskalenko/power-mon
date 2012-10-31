@@ -22,29 +22,6 @@ int main(void)
 	return 0;
 }
 
-void testADCs(void)
-{
-	int i,v;
-	char[255] msg;
-	char[16] temp;
-
-	ADMUX = 0; // Assumes voltage sensor is on ADC0
-	ADCSRA = (1<<ADEN) | (1<<ADSC); // Enable ADC and start conversion
-	while((ADCSRA>>ADSC)&1); // Wait for conversion to complete
-	v = (ADCH<<8) | ADCL - 1<<9; // Get voltage value
-
-	ADMUX = 1<<MUX0; // Assumes current sensor is on ADC1
-	ADCSRA = (1<<ADEN) | (1<<ADSC); // Enable ADC and start conversion
-	while((ADCSRA>>ADSC)&1); // Wait for conversion to complete
-	i = (ADCH<<8) | ADCL - 1<<9; // Get current value
-
-	itoa(v,msg,10);
-	strcat(msg,",");
-	itoa(i,temp,10);
-	strcat(msg,temp);
-	transmit_message(msg);
-}
-
 long getPower(void)
 {
 	long i,v;
@@ -113,5 +90,4 @@ void init_timer(void)
 ISR(TIMER1_COMPA_vect)
 {
 	counter++;
-	testADCS();
 }
