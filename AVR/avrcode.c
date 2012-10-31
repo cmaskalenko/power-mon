@@ -58,7 +58,7 @@ void init_serial(void)
 	UCSR0C = (3<<UCSZ00) | (1<<USBS0) | (0<<UPM00) | (0<<UPM01);
 }
 
-void transmit_message(char[255] message)
+void transmit_message(char[256] message)
 {
 	int i;
 	
