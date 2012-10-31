@@ -22,6 +22,9 @@ int main(void)
 	sei();
 	init_serial();
 	init_timer();
+
+	while(1);
+
 	return 0;
 }
 
@@ -101,5 +104,10 @@ ISR(TIMER1_COMPA_vect)
 	{
 		// Calculate mean power in watts
 		f_power = powerSum / N * (-0.027454);
+
+		// Transmit data here
+
+		counter = 0; // Reset power calculation
+		powerSum = 0;
 	}
 }
