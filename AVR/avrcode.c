@@ -82,7 +82,7 @@ void transmit_serial(unsigned char data)
 void init_timer(void)
 {
 	// Ensure that OC1A is disconnected from output pin 
-	TCCR1A = (0<<COM0A1) | (0<<COM0A0);
+	TCCR1A = (0<<COM1A1) | (0<<COM1A0);
 	
 	// No prescaling, CTC mode
 	TCCR1B = (1<<CS10) | (1<<WGM12);
