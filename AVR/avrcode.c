@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define F_CPU 8000000UL //8MHz clock
+#define F_CPU 8000000UL // 8MHz clock
 #define Fs 16000 // 16kHz sampling rate
 #define N 960000L // Number of samples to take per reading
 
@@ -44,14 +44,14 @@ long getPower(void)
 
 void init_serial(void)
 {
-	//Set baud rate to 9600
+	// Set baud rate to 9600
 	UBRR0H = (unsigned char)(51>>8);
 	UBRR0L = (unsigned char) 51;
 
-	//Enable transmit/recieve
+	// Enable transmit/recieve
 	UCSR0B = (1<<RXEN0) | (1<<TXEN0);
 
-	//Configure tansmission for 8 bit, 2 stop, no parity
+	// Configure tansmission for 8 bit, 2 stop, no parity
 	UCSR0C = (3<<UCSZ00) | (1<<USBS0) | (0<<UPM00) | (0<<UPM01);
 }
 
@@ -59,32 +59,32 @@ void transmit_message(char[255] message)
 {
 	int i;
 	
-	//Transmit the entire message char by char
+	// Transmit the entire message char by char
 	for(i=0; i<256; i++)
 	{
 		transmit_serial(message[i]);
 	}
 	
-	//Ensure the last character is null-termination
+	// Ensure the last character is null-termination
 	transmit_serial('\0');
 }
 
 void transmit_serial(unsigned char data)
 {
-	//Wait for empty transmit buffer, then transmit
+	// Wait for empty transmit buffer, then transmit
 	while(!(UCSR0A&(1<<UDRE0)));
 	UDR0 = data;
 }
 
 void init_timer(void)
 {
-	//Ensure that OC1A is disconnected from output pin 
+	// Ensure that OC1A is disconnected from output pin 
 	TCCR1A = (0<<COM0A1) | (0<<COM0A0);
 	
-	//No prescaling, CTC mode
+	// No prescaling, CTC mode
 	TCCR1B = (1<<CS10) | (1<<WGM12);
 
-	//Enable interupt flag
+	// Enable interupt flag
 	TIMSK1 = (1<<OCIE1A);
 
 	OCR1A = F_CPU/Fs-1;
@@ -93,10 +93,13 @@ void init_timer(void)
 ISR(TIMER1_COMPA_vect)
 {
 	float f_power;
+
 	counter++;
-	powerSum += getPower();
-	if (counter >= N)
+	powerSum += getPower(); // Sum up power values
+
+	if (counter >= N) // Sampling time has passed
 	{
-		f_power = powerSum/N*(-0.027454);
+		// Calculate mean power in watts
+		f_power = powerSum / N * (-0.027454);
 	}
 }
