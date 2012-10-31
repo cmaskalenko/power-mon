@@ -5,6 +5,8 @@
 #include <stdlib.h>
 
 #define F_CPU 8000000UL //8MHz clock
+#define Fs 16000 // 16kHz sampling rate
+#define N 960000L // Number of samples to take per reading
 
 long getPower(void);
 void init_serial(void);
@@ -12,7 +14,8 @@ void transmit_serial(unsigned char data);
 void transmit_message(char[255] message);
 void init_timer(void);
 
-int counter = 0;
+long counter = 0;
+long long powerSum = 0;
 
 int main(void)
 {
@@ -84,10 +87,16 @@ void init_timer(void)
 	//Enable interupt flag
 	TIMSK1 = (1<<OCIE1A);
 
-	OCR1A = 3999;
+	OCR1A = F_CPU/Fs-1;
 }
 
 ISR(TIMER1_COMPA_vect)
 {
+	float f_power;
 	counter++;
+	powerSum += getPower();
+	if (counter >= N)
+	{
+		f_power = powerSum/N*(-0.027454);
+	}
 }
