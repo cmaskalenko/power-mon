@@ -9,7 +9,7 @@
 long getPower(void);
 void init_serial(void);
 void transmit_serial(unsigned char data);
-void transmit_message(char[255] message);
+void transmit_message(char message[256]);
 void init_timer(void);
 
 int counter = 0;
@@ -25,18 +25,18 @@ int main(void)
 void testADCs(void)
 {
 	int i,v;
-	char[255] msg;
-	char[16] temp;
+	char msg[255];
+	char temp[16];
 
 	ADMUX = 0; // Assumes voltage sensor is on ADC0
 	ADCSRA = (1<<ADEN) | (1<<ADSC); // Enable ADC and start conversion
 	while((ADCSRA>>ADSC)&1); // Wait for conversion to complete
-	v = (ADCH<<8) | ADCL - 1<<9; // Get voltage value
+	v = ((ADCH<<8) | ADCL) - (1<<9); // Get voltage value
 
 	ADMUX = 1<<MUX0; // Assumes current sensor is on ADC1
 	ADCSRA = (1<<ADEN) | (1<<ADSC); // Enable ADC and start conversion
 	while((ADCSRA>>ADSC)&1); // Wait for conversion to complete
-	i = (ADCH<<8) | ADCL - 1<<9; // Get current value
+	i = ((ADCH<<8) | ADCL) - (1<<9); // Get current value
 
 	itoa(v,msg,10);
 	strcat(msg,",");
@@ -52,12 +52,12 @@ long getPower(void)
 	ADMUX = 0; // Assumes voltage sensor is on ADC0
 	ADCSRA = (1<<ADEN) | (1<<ADSC); // Enable ADC and start conversion
 	while((ADCSRA>>ADSC)&1); // Wait for conversion to complete
-	v = (ADCH<<8) | ADCL - 1<<9; // Get voltage value
+	v = ((ADCH<<8) | ADCL) - (1<<9); // Get voltage value
 	
 	ADMUX = 1<<MUX0; // Assumes current sensor is on ADC1
 	ADCSRA = (1<<ADEN) | (1<<ADSC); // Enable ADC and start conversion
 	while((ADCSRA>>ADSC)&1); // Wait for conversion to complete
-	i = (ADCH<<8) | ADCL - 1<<9; // Get current value
+	i = ((ADCH<<8) | ADCL) - (1<<9); // Get current value
 	
 	return i*v;
 }
@@ -75,7 +75,7 @@ void init_serial(void)
 	UCSR0C = (3<<UCSZ00) | (1<<USBS0) | (0<<UPM00) | (0<<UPM01);
 }
 
-void transmit_message(char[255] message)
+void transmit_message(char message[256])
 {
 	int i;
 	
