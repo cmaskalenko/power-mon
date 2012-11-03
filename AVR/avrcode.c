@@ -64,9 +64,9 @@ long getPower(void)
 
 void init_serial(void)
 {
-	//Set baud rate to 9600
-	UBRR0H = (unsigned char)(51>>8);
-	UBRR0L = (unsigned char) 51;
+	//Set baud rate to 230.4K
+	UBRR0H = (unsigned char)(1>>8);
+	UBRR0L = (unsigned char) 1;
 
 	//Enable transmit/recieve
 	UCSR0B = (1<<RXEN0) | (1<<TXEN0);
