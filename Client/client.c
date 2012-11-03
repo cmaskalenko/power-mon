@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <termios.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 FILE* init_serial(void);
 
@@ -50,16 +51,19 @@ int main(int argc, char *argv[])
 FILE* init_serial()
 {
 	FILE* sport;
+	int serialfp;
 	struct termios termc;
 
 	//Open the file handle for serial comm
-	sport = fopen("/dev/ttyACM0", "r+");
+	serialfp = open("/dev/ttyACM0", O_RDWR);
 
 	//Set baud rate
-	cfsetispeed(&termc, B9600);
-	cfsetospeed(&termc, B9600);
+	cfsetispeed(&termc, B230400);
+	cfsetospeed(&termc, B230400);
 
-	tcsetattr(sport, &termc);
+	tcsetattr(serialfp, TCSANOW, &termc);
+
+	sport = fdopen(serialfp, "r+");
 
 	return sport;
 }
