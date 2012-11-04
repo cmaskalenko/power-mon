@@ -19,6 +19,9 @@ int main(void)
 	sei();
 	init_serial();
 	init_timer();
+
+	while(1);
+
 	return 0;
 }
 
@@ -115,7 +118,6 @@ ISR(TIMER1_COMPA_vect)
 	counter++;
 	if (counter>6000)
 	{
-		cli();
 	}
 	testADCs();
 }
