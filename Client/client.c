@@ -35,10 +35,11 @@ int main(int argc, char *argv[])
 	}
 
 	//Read from serial port, write to output file
-	while(sprint[0] != '\0')
+	while(1)
 	{
 		fgets(sprint, sizeof(sprint), serialport);
 		fprintf(writefile, sprint);
+		printf("%s\n");
 	}
 	
 	//Clean up
