@@ -109,11 +109,13 @@ ISR(TIMER1_COMPA_vect)
 		// Transmit data to PC
 		itoa(i_power,msg,10);
 		//strcat(msg,".");
-		itoa((int)((f_power-i_power)*1000),temp,10);
+		//itoa((int)((f_power-i_power)*1000),temp,10);
 		//strcat(msg,temp);
+		transmit_serial('(');
 		transmit_message(msg);
-		transmit_serial('.');
-		transmit_message(temp);
+		//transmit_serial('.');
+		//transmit_message(temp);
+		transmit_message(")\n");
 
 		counter = 0; // Reset power calculation
 		powerSum = 0;
