@@ -67,9 +67,6 @@ void transmit_message(char message[256])
 	{
 		transmit_serial(message[i]);
 	}
-	
-	// Ensure the last character is null-termination
-	transmit_serial('\0');
 }
 
 void transmit_serial(unsigned char data)
