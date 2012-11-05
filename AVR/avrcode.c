@@ -5,8 +5,8 @@
 #include <stdlib.h>
 
 #define F_CPU 8000000UL // 8MHz clock
-#define Fs 16000 // 16kHz sampling rate
-#define N 960000L // Number of samples to take per reading
+#define Fs 2000 // 2kHz sampling rate
+#define N 120000L // Number of samples to take per reading
 
 long getPower(void);
 void init_serial(void);
@@ -35,12 +35,12 @@ long getPower(void)
 	ADMUX = 0; // Assumes voltage sensor is on ADC0
 	ADCSRA = (1<<ADEN) | (1<<ADSC); // Enable ADC and start conversion
 	while((ADCSRA>>ADSC)&1); // Wait for conversion to complete
-	v = ((ADCH<<8) | ADCL) - (1<<9); // Get voltage value
+	v = ADC - (1<<9); // Get voltage value
 	
 	ADMUX = 1<<MUX0; // Assumes current sensor is on ADC1
 	ADCSRA = (1<<ADEN) | (1<<ADSC); // Enable ADC and start conversion
 	while((ADCSRA>>ADSC)&1); // Wait for conversion to complete
-	i = ((ADCH<<8) | ADCL) - (1<<9); // Get current value
+	i = ADC - (1<<9); // Get current value
 	
 	return i*v;
 }
@@ -108,10 +108,12 @@ ISR(TIMER1_COMPA_vect)
 
 		// Transmit data to PC
 		itoa(i_power,msg,10);
-		strcat(msg,".");
+		//strcat(msg,".");
 		itoa((int)((f_power-i_power)*1000),temp,10);
-		strcat(msg,temp);
+		//strcat(msg,temp);
 		transmit_message(msg);
+		transmit_serial('.');
+		transmit_message(temp);
 
 		counter = 0; // Reset power calculation
 		powerSum = 0;
