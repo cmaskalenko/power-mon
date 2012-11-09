@@ -41,12 +41,6 @@ int main(void)
 	{
 		ADCSRA |= (1<<ADSC);
 		while(ADCSRA&(1<<ADSC));
-		noise = ADC;
-		ADMUX = 0;
-		_delay_us(100);
-
-		ADCSRA |= (1<<ADSC);
-		while(ADCSRA&(1<<ADSC));
 		v = ADC;
 		ADMUX |= (1<<MUX0);
 		_delay_us(100);
@@ -54,15 +48,11 @@ int main(void)
 		ADCSRA |= (1<<ADSC);
 		while(ADCSRA&(1<<ADSC));
 		i = ADC;
-
-		ADMUX = 1<<MUX1;
-
+		ADMUX = 0;
 		_delay_us(100);
 			
-		//v-=(1<<9);
-		//i-=(1<<9);
-		v-=noise;
-		i-=noise;
+		v-=(1<<9);
+		i-=(1<<9);
 
 		/*itoa(v,msg,10);
 		transmit_message(msg);
