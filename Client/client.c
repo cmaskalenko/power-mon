@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 	{
 		fgets(sprint, sizeof(sprint), serialport);
 		fprintf(writefile, sprint);
-		printf("%s\n");
+		printf("%s\r\n",sprint);
 	}
 	
 	//Clean up
@@ -59,8 +59,8 @@ FILE* init_serial()
 	serialfp = open("/dev/ttyACM0", O_RDWR);
 
 	//Set baud rate
-	cfsetispeed(&termc, B230400);
-	cfsetospeed(&termc, B230400);
+	cfsetispeed(&termc, B57600);
+	cfsetospeed(&termc, B57600);
 
 	tcsetattr(serialfp, TCSANOW, &termc);
 
