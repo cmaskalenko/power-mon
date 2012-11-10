@@ -51,27 +51,25 @@ int main(void)
 		ADMUX = 0;
 		_delay_us(100);
 			
-		v-=(1<<9);
 		i-=(1<<9);
-
-		/*itoa(v,msg,10);
-		transmit_message(msg);
-		transmit_message(",");
-		itoa(i,msg,10);
-		transmit_message(msg);
-		transmit_message("\r\n");
-		_delay_ms(999);*/
+		if(i < 0) i = -i;
 		
-
-		sum += (i*v);
+//		itoa(v,msg,10);
+//		transmit_message(msg);
+//		transmit_message(",");
+//		itoa(i,msg,10);
+//		transmit_message(msg);
+//		transmit_message("\r\n");
+		
+		sum += ((long)i*v);
 		j++;
-		if (j>1000)
+		if (j>10000)
 		{
-			p = (int)(-.0275f*(sum/j));
+			p = (int)(.01535f*(sum/j));
 			
 			itoa(p,msg,10);
 			transmit_message(msg);
-			transmit_serial('\0');
+			transmit_message("\r\n");
 			j=0;
 			sum=0;
 		}
@@ -83,8 +81,8 @@ int main(void)
 void init_serial(void)
 {
 	//Set baud rate to 57.6K
-	UBRR0H = (unsigned char)(8>>8);
-	UBRR0L = (unsigned char) 8;
+	UBRR0H = (unsigned char)(0>>8);
+	UBRR0L = (unsigned char) 0;
 
 	//Enable transmit/recieve
 	UCSR0B = (1<<RXEN0) | (1<<TXEN0);
