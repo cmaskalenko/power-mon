@@ -28,7 +28,7 @@ clean :
 	rm -f *.hex *.obj *.o
 
 fuses:
-	avrdude $(ADFLAGS) -U lfuse:w:0x62:m #http://www.engbedded.com/cgi-bin/fc.cgi 
+	avrdude $(ADFLAGS) -U lfuse:w:0xc2:m #http://www.engbedded.com/cgi-bin/fc.cgi 
 	avrdude $(ADFLAGS) -U hfuse:w:0xdf:m 
 	avrdude $(ADFLAGS) -U efuse:w:0xF9:m 
 
