@@ -30,5 +30,5 @@ clean :
 fuses:
 	avrdude $(ADFLAGS) -U lfuse:w:0xc2:m #http://www.engbedded.com/cgi-bin/fc.cgi 
 	avrdude $(ADFLAGS) -U hfuse:w:0xdf:m 
-	avrdude $(ADFLAGS) -U efuse:w:0xF9:m 
+	avrdude $(ADFLAGS) -U efuse:w:0x01:m 
 
