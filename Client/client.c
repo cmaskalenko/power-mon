@@ -11,6 +11,8 @@ int main(int argc, char *argv[])
 {
 	FILE *writefile, *serialport;
 	char sprint[256];
+	int i;
+	char c;
 
 	if (argc != 2)
 	{
@@ -34,14 +36,30 @@ int main(int argc, char *argv[])
 		return errno;
 	}
 
+	printf("Got here.\r\n");
+
 	//Read from serial port, write to output file
-	while(1)
-	{
-		fgets(sprint, sizeof(sprint), serialport);
-		fprintf(writefile, sprint);
-		printf("%s\r\n",sprint);
-	}
 	
+	for (i=0; i<25600; i++)
+	{
+		c = fgetc(serialport);
+		//Add in new line when receiving carriage return
+		if (c == '\r')
+		{
+			fputc('\r',writefile);
+			fputc('\n',writefile);
+			fflush(writefile);
+			printf("\r\n");
+		} 
+		else 
+		{
+			fputc(c,writefile);
+			fflush(writefile);
+			printf("%c",c);
+		}
+		fflush(stdout);
+	}
+
 	//Clean up
 	fclose(writefile);
 	fclose(serialport);
@@ -56,15 +74,16 @@ FILE* init_serial()
 	struct termios termc;
 
 	//Open the file handle for serial comm
-	serialfp = open("/dev/ttyACM0", O_RDWR);
+	serialfp = open("/dev/ttyACM0", O_RDWR | O_NOCTTY);
 
-	//Set baud rate
-	cfsetispeed(&termc, B57600);
-	cfsetospeed(&termc, B57600);
+	//Set baud rate to .5M
+	cfsetispeed(&termc, B500000);
+	cfsetospeed(&termc, B500000);
+	termc.c_cflag |= (CLOCAL | CREAD);
 
 	tcsetattr(serialfp, TCSANOW, &termc);
 
-	sport = fdopen(serialfp, "r+");
+	sport = fdopen(serialfp, "rb+");
 
 	return sport;
 }
