@@ -10,7 +10,6 @@ FILE* init_serial(void);
 int main(int argc, char *argv[])
 {
 	FILE *writefile, *serialport;
-	char sprint[256];
 	int i;
 	char c;
 
@@ -36,7 +35,7 @@ int main(int argc, char *argv[])
 		return errno;
 	}
 
-	printf("Got here.\r\n");
+	printf("Power (W):\r\n");
 
 	//Read from serial port, write to output file
 	
