@@ -80,7 +80,7 @@ int main(void)
 
 void init_serial(void)
 {
-	//Set baud rate to 57.6K
+	//Set baud rate to 0.5M 
 	UBRR0H = (unsigned char)(0>>8);
 	UBRR0L = (unsigned char) 0;
 
