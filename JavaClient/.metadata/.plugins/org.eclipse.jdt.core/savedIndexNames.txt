@@ -1,0 +1,6 @@
+INDEX VERSION 1.126+C:\cygwin\home\Carl\power-mon\JavaClient\.metadata\.plugins\org.eclipse.jdt.core
+3984032519.index
+1220049976.index
+3142433899.index
+2668366663.index
+4110081629.index

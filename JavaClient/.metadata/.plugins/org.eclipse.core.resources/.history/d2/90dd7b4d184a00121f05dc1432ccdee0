@@ -1,0 +1,41 @@
+import java.io.*;
+import javax.microedition.io.*;
+import javax.bluetooth.*;
+
+public class TestClient {
+
+	public static void main(String args[])
+	{
+		try
+		{
+			LocalDevice ld = LocalDevice.getLocalDevice();
+			DiscoveryAgent da = ld.getDiscoveryAgent();
+
+			
+			RemoteDevice[] devs = da.retrieveDevices(DiscoveryAgent.PREKNOWN);
+			for (int i=0; i<devs.length; i++)
+			{
+				System.out.println(devs[i].toString());
+			}
+
+			StreamConnection conn = (StreamConnection) 
+					Connector.open("btspp://000666495720:3");
+
+
+
+			DataInputStream in = conn.openDataInputStream();
+
+
+			for (int i=0; i<10; i++)
+			{
+				System.out.println(in.readByte());
+			}
+
+			conn.close();
+		} 
+		catch (IOException e) 
+		{
+			System.err.print(e.toString());
+		}
+	}
+}

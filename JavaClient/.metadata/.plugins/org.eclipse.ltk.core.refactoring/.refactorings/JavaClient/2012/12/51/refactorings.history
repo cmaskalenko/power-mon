@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring accessors="true" comment="Delete element from project &apos;JavaClient&apos;&#x0D;&#x0A;- Original project: &apos;JavaClient&apos;&#x0D;&#x0A;- Original element: &apos;PowerDataPoint.java&apos;" description="Delete element" element1="/src&lt;{PowerDataPoint.java" elements="1" flags="589830" id="org.eclipse.jdt.ui.delete" resources="0" stamp="1355969127207" subPackages="false" version="1.0"/>
+</session>

@@ -1,0 +1,52 @@
+import java.io.*;
+import javax.microedition.io.*;
+import javax.bluetooth.*;
+
+public class TestClient
+{
+	public final static String MACaddr = "000666495720";
+
+	public static void main(String args[])
+	{
+		try
+		{
+			LocalDevice ld = LocalDevice.getLocalDevice();
+			DiscoveryAgent da = ld.getDiscoveryAgent();
+			
+			RemoteDevice[] devs = da.retrieveDevices(DiscoveryAgent.PREKNOWN);
+			RemoteDevice monitor = null;
+			for (int i=0; i<devs.length; i++)
+			{
+				System.out.println("Device address is "+devs[i]+".\n");
+				if(devs[i].getBluetoothAddress() == MACaddr)
+				{
+					monitor = devs[i];
+				}
+			}
+			if (monitor == null)
+			{
+				System.err.println("Unable to discover power monitor.\n");
+				System.exit(1);
+			}
+
+			StreamConnection conn = (StreamConnection) 
+					Connector.open("btspp://"+MACaddr+":5");
+
+
+
+			DataInputStream in = conn.openDataInputStream();
+
+
+			for (int i=0; i<10; i++)
+			{
+				System.out.println(in.readByte());
+			}
+
+			conn.close();
+		} 
+		catch (IOException e) 
+		{
+			System.err.print(e.toString());
+		}
+	}
+}

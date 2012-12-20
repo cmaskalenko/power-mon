@@ -1,0 +1,23 @@
+import java.io.DataInputStream;
+import java.util.Vector;
+
+public class DataLoader implements Runnable
+{
+	Vector<PowerDataPoint> data;
+	DataInputStream in;
+	
+	public DataLoader(Vector<PowerDataPoint> data, DataInputStream in)
+	{
+		this.data = data;
+		this.in = in;
+	}
+
+	@Override
+	public void run()
+	{
+		
+	}
+	
+	
+
+}

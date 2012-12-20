@@ -1,0 +1,23 @@
+import java.io.*;
+import javax.microedition.io.*;
+import javax.bluetooth.*;
+
+public class TestClient {
+
+ public static void main( String args[] ) {
+   try {
+
+      StreamConnection conn = (StreamConnection) 
+          Connector.open("btspp://0012D25ABDE4:3");
+      
+      
+
+      DataInputStream in = conn.openDataInputStream();
+
+      //System.out.println(in.)
+
+      conn.close();
+   } 
+   catch ( IOException e ) { System.err.print(e.toString()); }
+ }
+}
