@@ -16,9 +16,11 @@ import processing.core.PFont;
 public class JavaClient extends PApplet
 {
 	private static final long serialVersionUID = 1L;
-	Vector<PowerDataPoint> dataList = new Vector<PowerDataPoint>();
+	private Vector<PowerDataPoint> dataList = new Vector<PowerDataPoint>();
 	private static final int gposx = 100, gposy = 50;
 	private PFont f24, f12;
+	private int maxp;
+	private static final int numMarkings = 10;
 	
 	public void setup()
 	{
@@ -72,6 +74,7 @@ public class JavaClient extends PApplet
 		stroke(0);
 		f12 = loadFont("SegoeUI-12.vlw");
 		f24 = loadFont("SegoeUI-24.vlw");
+		maxp = 200;
 	}
 	
 	public void draw()
@@ -103,6 +106,37 @@ public class JavaClient extends PApplet
 			px = x;
 			py = y;
 		}
+		
+		int[] markings = getPowerAxisMarkings();
+		for (int i=0; i<markings.length; i++)
+		{
+			y = height - 2 - gposy - markings[i]*(height - gposy)/maxp;
+			line(gposx-5,y,gposx,y);
+			textFont(f12);
+			textAlign(RIGHT,CENTER);
+			text(markings[i],gposx-10,y);
+		}
+	}
+	
+	public int[] getPowerAxisMarkings()
+	{
+		int interval = maxp/numMarkings;
+		int exponent = (int)Math.log10(interval);
+		float mantissa = interval / (int)Math.pow(10,exponent);
+		if (mantissa < 1.41) mantissa = 1; // 1.41 is geometric mean of 1 and 2
+		else if ((mantissa >= 1.41) && (mantissa < 3.16)) mantissa = 2; // 3.16 is geometric mean of 2 and 5
+		else if ((mantissa >= 3.16) && (mantissa < 7.07)) mantissa = 5; // 7.07 is geometric mean of 5 and 10
+		else mantissa = 10;
+		interval = (int)(mantissa * Math.pow(10, exponent)); // Revised, "nice" number interval for markings
+		
+		int[] rtnval = new int[(int)Math.ceil(maxp/interval)];
+		
+		for (int i=0; i<rtnval.length; i++)
+		{
+			rtnval[i] = i*interval;
+		}
+		
+		return rtnval;
 	}
 
 	public static void main(String[] args)
