@@ -11,16 +11,19 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 
 import processing.core.PApplet;
+import processing.core.PFont;
 
 public class JavaClient extends PApplet
 {
 	private static final long serialVersionUID = 1L;
 	Vector<PowerDataPoint> dataList = new Vector<PowerDataPoint>();
 	private static final int gposx = 100, gposy = 50;
+	private PFont f24, f12;
 	
 	public void setup()
 	{
 		frame.setTitle("Bluetooth Power Monitor Realtime Graph");
+		
 		LocalDevice ld;
 		DiscoveryAgent da = null;
 		String url;
@@ -67,6 +70,8 @@ public class JavaClient extends PApplet
 		size(800,600);
 		background(255);
 		stroke(0);
+		f12 = loadFont("SegoeUI-12.vlw");
+		f24 = loadFont("SegoeUI-24.vlw");
 	}
 	
 	public void draw()
@@ -75,8 +80,17 @@ public class JavaClient extends PApplet
 		int x, px = 0;
 		background(255);
 		stroke(0);
+		fill(255);
 		
 		rect(gposx, -1, width - gposx, height - 1 - gposy);
+		
+		fill(0);
+		textFont(f24);
+		textAlign(CENTER,CENTER);
+		if (dataList.size() > 0)
+		{
+			text((int)dataList.lastElement().getPower()+"W", gposx/2, height-gposy/2);
+		}
 		
 		for (int i=0; i<dataList.size(); i++)
 		{
