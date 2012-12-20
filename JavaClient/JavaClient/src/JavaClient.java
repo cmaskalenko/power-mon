@@ -85,6 +85,8 @@ public class JavaClient extends PApplet
 		stroke(0);
 		fill(255);
 		
+		maxp = getMaxPower()*6/5;
+		
 		rect(gposx, -1, width - gposx, height - 1 - gposy);
 		
 		fill(0);
@@ -97,7 +99,7 @@ public class JavaClient extends PApplet
 		
 		for (int i=0; i<dataList.size(); i++)
 		{
-			y = height - 1 - gposy - (int)dataList.get(i).getPower();
+			y = height - 1 - gposy - ((int)dataList.get(i).getPower())*(height - gposy)/maxp;
 			x = 5*i + gposx;
 			if (i > 0)
 			{
@@ -111,14 +113,14 @@ public class JavaClient extends PApplet
 		for (int i=0; i<markings.length; i++)
 		{
 			y = height - 2 - gposy - markings[i]*(height - gposy)/maxp;
-			line(gposx-5,y,gposx,y);
+			line(gposx - 5, y, gposx, y);
 			textFont(f12);
-			textAlign(RIGHT,CENTER);
-			text(markings[i],gposx-10,y);
+			textAlign(RIGHT, CENTER);
+			text(markings[i], gposx - 10, y - 1);
 		}
 	}
 	
-	public int[] getPowerAxisMarkings()
+	private int[] getPowerAxisMarkings()
 	{
 		int interval = maxp/numMarkings;
 		int exponent = (int)Math.log10(interval);
@@ -129,7 +131,7 @@ public class JavaClient extends PApplet
 		else mantissa = 10;
 		interval = (int)(mantissa * Math.pow(10, exponent)); // Revised, "nice" number interval for markings
 		
-		int[] rtnval = new int[(int)Math.ceil(maxp/interval)];
+		int[] rtnval = new int[(int)Math.ceil((float)maxp/interval)];
 		
 		for (int i=0; i<rtnval.length; i++)
 		{
@@ -137,6 +139,19 @@ public class JavaClient extends PApplet
 		}
 		
 		return rtnval;
+	}
+	
+	private int getMaxPower()
+	{
+		int max = 10;
+		for (int i=0; i<dataList.size(); i++)
+		{
+			if (dataList.get(i).getPower()>max)
+			{
+				max = (int)dataList.get(i).getPower();
+			}
+		}
+		return max;
 	}
 
 	public static void main(String[] args)
