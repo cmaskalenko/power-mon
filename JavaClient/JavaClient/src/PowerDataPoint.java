@@ -9,11 +9,11 @@ public class PowerDataPoint
 	{
 		if (power >= 25)
 		{
-			this.power = power;
+			this.power = power*1.063-6.19;
 		}
 		else
 		{
-			this.power = power;
+			this.power = 0;
 		}
 		date = new Date();
 	}
