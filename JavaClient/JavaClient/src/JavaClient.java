@@ -69,7 +69,7 @@ public class JavaClient extends PApplet
 			System.exit(1);
 		}
 		
-		size(800,600);
+		size(850,600);
 		background(255);
 		stroke(0);
 		f12 = loadFont("SegoeUI-12.vlw");
@@ -83,10 +83,12 @@ public class JavaClient extends PApplet
 		int x, px = 0;
 		background(255);
 		stroke(0);
-		fill(255);
+		
+		printLabels();
 		
 		maxp = getMaxPower()*6/5;
 		
+		fill(255);
 		rect(gposx, -1, width - gposx, height - 1 - gposy);
 		
 		fill(0);
@@ -104,6 +106,8 @@ public class JavaClient extends PApplet
 			if (i > 0)
 			{
 				line(px, py, x, y);
+				ellipseMode(CENTER);
+				ellipse(x,y,2,2);
 			}
 			px = x;
 			py = y;
@@ -139,6 +143,23 @@ public class JavaClient extends PApplet
 		}
 		
 		return rtnval;
+	}
+	
+	private void printLabels()
+	{
+		int x = gposx/2;
+		int y = height/2 - gposy/2;
+		textAlign(CENTER,BOTTOM);
+		pushMatrix();
+		translate(x,y);
+		rotate(-HALF_PI);
+		fill(0);
+		textFont(f24);
+		text("Power (W)",0,0);
+		popMatrix();
+		
+		textAlign(CENTER,CENTER);
+		text("Last 150 Data Points", width/2 + gposx/2, height - gposy/2);
 	}
 	
 	private int getMaxPower()
