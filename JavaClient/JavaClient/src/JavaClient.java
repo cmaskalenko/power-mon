@@ -16,9 +16,11 @@ public class JavaClient extends PApplet
 {
 	private static final long serialVersionUID = 1L;
 	Vector<PowerDataPoint> dataList = new Vector<PowerDataPoint>();
+	private static final int gposx = 100, gposy = 50;
 	
 	public void setup()
 	{
+		frame.setTitle("Bluetooth Power Monitor Realtime Graph");
 		LocalDevice ld;
 		DiscoveryAgent da = null;
 		String url;
@@ -69,17 +71,22 @@ public class JavaClient extends PApplet
 	
 	public void draw()
 	{
-		int y,py=0;
+		int y, py = 0;
+		int x, px = 0;
 		background(255);
 		stroke(0);
+		
+		rect(gposx, -1, width - gposx, height - 1 - gposy);
+		
 		for (int i=0; i<dataList.size(); i++)
 		{
-			y = height - 1 - (int)dataList.get(i).getPower();
+			y = height - 1 - gposy - (int)dataList.get(i).getPower();
+			x = 5*i + gposx;
 			if (i > 0)
 			{
-				line(5*(i-1),py,5*i,y);
+				line(px, py, x, y);
 			}
-			
+			px = x;
 			py = y;
 		}
 	}
