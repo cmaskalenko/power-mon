@@ -24,6 +24,7 @@ int main(void)
 
 	transmit_message("Init\n\0");
 
+	// Enable ADCs and set prescaler to 110
 	ADCSRA = (1<<ADEN)|
 			(0<<ADSC)|
 			(0<<ADATE)|
@@ -35,38 +36,36 @@ int main(void)
 	int j = 0;
 	long long sum = 0;
 
+	// Select ADC2
 	ADMUX = 1<<MUX1;
 	
 	while(1)
 	{
+		// Take voltage reading
 		ADCSRA |= (1<<ADSC);
 		while(ADCSRA&(1<<ADSC));
 		v = ADC;
-		ADMUX |= (1<<MUX0);
+		ADMUX |= (1<<MUX0); // Select ADC1
 		_delay_us(100);
 
+		// Take current reading
 		ADCSRA |= (1<<ADSC);
 		while(ADCSRA&(1<<ADSC));
 		i = ADC;
-		ADMUX = 0;
+		ADMUX = 0; // Select ADC0
 		_delay_us(100);
 			
-		i-=(1<<9);
-		if(i < 0) i = -i;
+		i-=(1<<9); // Remove 2.5V offset from current measurement
+		if(i < 0) i = -i; // Fully rectify
 		
-//		itoa(v,msg,10);
-//		transmit_message(msg);
-//		transmit_message(",");
-//		itoa(i,msg,10);
-//		transmit_message(msg);
-//		transmit_message("\r\n");
-		
+		// Calculate instantaneous power
 		sum += ((long)i*v);
 		j++;
 		if (j>10000)
 		{
+			// Average 10000 data points
 			p = (int)(.01535f*(sum/j));
-			
+			// Send power data to PC
 			itoa(p,msg,10);
 			transmit_message(msg);
 			transmit_message("\r\n");
