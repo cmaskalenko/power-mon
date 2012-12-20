@@ -7,7 +7,14 @@ public class PowerDataPoint
 	
 	public PowerDataPoint(double power)
 	{
-		this.power = power;
+		if (power >= 25)
+		{
+			this.power = power;
+		}
+		else
+		{
+			this.power = power;
+		}
 		date = new Date();
 	}
 	
@@ -19,5 +26,11 @@ public class PowerDataPoint
 	public double getPower()
 	{
 		return power;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return (date.getTime() + "," + power);
 	}
 }

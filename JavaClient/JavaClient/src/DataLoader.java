@@ -1,24 +1,37 @@
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Vector;
 
 public class DataLoader implements Runnable
 {
-	Vector<PowerDataPoint> data;
-	DataInputStream in;
+	private Vector<PowerDataPoint> data;
+	private DataInputStream in;
+	private BufferedWriter out;
 	
-	public DataLoader(Vector<PowerDataPoint> data, DataInputStream in)
+	public DataLoader(Vector<PowerDataPoint> data, DataInputStream in, BufferedWriter out)
 	{
 		this.data = data;
 		this.in = in;
+		this.out = out;
 	}
 
 	@Override
 	public void run()
 	{
-		while(true)
+		PowerDataPoint p;
+		while (true)
 		{
-			data.add(new PowerDataPoint((double)getInt()));
+			p = new PowerDataPoint((double)getInt());
+			data.add(p);
+			try
+			{
+				out.write(p.toString() + "\n");
+			}
+			catch (IOException e)
+			{
+				System.err.println("Error while attempting to write to output file.\n");
+			}
 		}
 	}
 	
@@ -29,18 +42,26 @@ public class DataLoader implements Runnable
 		byte[] bs = new byte[16];
 		try
 		{
-			while((b = in.readByte())!='\r')
+			while((b = in.readByte()) != '\r')
 			{
-				bs[j]= b;
+				bs[j] = b;
 				j++;
 			}
 		}
 		catch (IOException e) 
 		{
-			System.err.print(e.toString());
+			System.err.println("Error: monitor lost power");
+			System.exit(1);
 		}
 		bs[j] = 0;
-		return Integer.parseInt(new String(bs).trim());
+		try
+		{
+			return Integer.parseInt(new String(bs).trim());
+		}
+		catch (NumberFormatException e)
+		{
+			return 0;
+		}
 	}
 
 }

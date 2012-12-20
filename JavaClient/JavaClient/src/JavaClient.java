@@ -1,4 +1,6 @@
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Vector;
 
@@ -21,6 +23,7 @@ public class JavaClient extends PApplet
 	private PFont f24, f12;
 	private int maxp;
 	private static final int numMarkings = 10;
+	private BufferedWriter bw = null;
 	
 	public void setup()
 	{
@@ -31,6 +34,18 @@ public class JavaClient extends PApplet
 		String url;
 		StreamConnection conn = null;
 		DataInputStream in = null;
+		FileWriter fw;
+		
+		try
+		{
+			fw = new FileWriter("out.csv");
+			bw = new BufferedWriter(fw);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			System.exit(1);
+		}
 		
 		try
 		{
@@ -39,24 +54,24 @@ public class JavaClient extends PApplet
 		}
 		catch (BluetoothStateException e)
 		{
-			System.err.println(e.toString());
+			e.printStackTrace();
 			System.exit(1);
 		}
-		UUID u = new UUID("0000110100001000800000805F9B34FB",false);
+		UUID u = new UUID("0000110100001000800000805F9B34FB", false);
 		
 		try
 		{
-			url = da.selectService(u,ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false);
+			url = da.selectService(u, ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false);
 			conn = (StreamConnection) Connector.open(url);
 			in = conn.openDataInputStream();
 		}
 		catch (IOException e)
 		{
-			System.err.println(e.toString());
+			e.printStackTrace();
 			System.exit(1);
 		}
 
-		Thread dloader = new Thread(new DataLoader(dataList,in));
+		Thread dloader = new Thread(new DataLoader(dataList, in, bw));
 		dloader.start();
 		
 		try
@@ -65,11 +80,11 @@ public class JavaClient extends PApplet
 		}
 		catch (IOException e)
 		{
-			System.err.println(e.toString());
+			e.printStackTrace();
 			System.exit(1);
 		}
 		
-		size(850,600);
+		size(850, 600);
 		background(255);
 		stroke(0);
 		f12 = loadFont("SegoeUI-12.vlw");
@@ -96,7 +111,7 @@ public class JavaClient extends PApplet
 		textAlign(CENTER,CENTER);
 		if (dataList.size() > 0)
 		{
-			text((int)dataList.lastElement().getPower()+"W", gposx/2, height-gposy/2);
+			text((int)dataList.lastElement().getPower() + "W", gposx/2, height - gposy/2);
 		}
 		
 		for (int i=0; i<dataList.size(); i++)
@@ -105,9 +120,9 @@ public class JavaClient extends PApplet
 			x = 5*i + gposx;
 			if (i > 0)
 			{
-				line(px, py, x, y);
+				line(px, py, x, y - 1);
 				ellipseMode(CENTER);
-				ellipse(x,y,2,2);
+				ellipse(x, y - 1, 2, 2);
 			}
 			px = x;
 			py = y;
@@ -124,22 +139,41 @@ public class JavaClient extends PApplet
 		}
 	}
 	
+	public void keyPressed()
+	{
+		if ((key == ESC) || (key == 'q'))
+		{
+			try
+			{
+				bw.close();
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+				System.exit(1);
+			}
+			System.exit(0);
+		}
+
+	}
+	
 	private int[] getPowerAxisMarkings()
 	{
-		int interval = maxp/numMarkings;
+		float interval = (float)maxp/numMarkings;
 		int exponent = (int)Math.log10(interval);
-		float mantissa = interval / (int)Math.pow(10,exponent);
+		float mantissa = (float)interval / (float)Math.pow(10,exponent);
 		if (mantissa < 1.41) mantissa = 1; // 1.41 is geometric mean of 1 and 2
 		else if ((mantissa >= 1.41) && (mantissa < 3.16)) mantissa = 2; // 3.16 is geometric mean of 2 and 5
 		else if ((mantissa >= 3.16) && (mantissa < 7.07)) mantissa = 5; // 7.07 is geometric mean of 5 and 10
 		else mantissa = 10;
-		interval = (int)(mantissa * Math.pow(10, exponent)); // Revised, "nice" number interval for markings
+		interval = (int)(mantissa*Math.pow(10, exponent)); // Revised, "nice" number interval for markings
+		
 		
 		int[] rtnval = new int[(int)Math.ceil((float)maxp/interval)];
 		
 		for (int i=0; i<rtnval.length; i++)
 		{
-			rtnval[i] = i*interval;
+			rtnval[i] = i*(int)interval;
 		}
 		
 		return rtnval;
@@ -149,16 +183,16 @@ public class JavaClient extends PApplet
 	{
 		int x = gposx/2;
 		int y = height/2 - gposy/2;
-		textAlign(CENTER,BOTTOM);
+		textAlign(CENTER, BOTTOM);
 		pushMatrix();
-		translate(x,y);
+		translate(x, y);
 		rotate(-HALF_PI);
 		fill(0);
 		textFont(f24);
-		text("Power (W)",0,0);
+		text("Power (W)", 0, 0);
 		popMatrix();
 		
-		textAlign(CENTER,CENTER);
+		textAlign(CENTER, CENTER);
 		text("Last 150 Data Points", width/2 + gposx/2, height - gposy/2);
 	}
 	
@@ -167,7 +201,7 @@ public class JavaClient extends PApplet
 		int max = 10;
 		for (int i=0; i<dataList.size(); i++)
 		{
-			if (dataList.get(i).getPower()>max)
+			if (dataList.get(i).getPower() > max)
 			{
 				max = (int)dataList.get(i).getPower();
 			}
